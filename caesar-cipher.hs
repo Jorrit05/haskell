@@ -1,5 +1,6 @@
 import Data.Char
 import Language.Haskell.TH.Syntax (Strict)
+import Data.List
 
 lowers :: String -> Int
 lowers xs = length [ x | x <- xs, x >= 'a' && x <= 'z']
@@ -38,6 +39,7 @@ rotate n xs = drop n xs ++ take n xs
 
 positions :: Eq a => a -> [a] -> [Int]
 positions x xs = [i | (x',i) <- zip xs [0..], x == x']
+positions x xs = [i | (x',i) <- zip xs [0..], x == x']
 
 crack :: String -> String
 crack xs = encode (-factor) xs
@@ -60,4 +62,16 @@ replicate' :: Int -> a -> [a]
 replicate' n a = [ a | _ <- [1..n] ]
 
 pyths :: Int -> [(Int, Int, Int)]
-pyths n = []
+pyths n = [ (x,y,z) | x <- [1..n],
+                      y <- [1..n],
+                      z <- [1..n], 
+                      x^2 + y^2 == z^2]
+
+factors :: Int -> [Int]
+factors n = [x | x <- [1..n], n `mod` x == 0]
+
+perfects :: Int -> [Int]
+perfects n = [x | x <- [1..n], (sum (factors x)) - x == x]
+
+my = [(x,y) | x <- [1,2], y <- [3,4]]
+-- my' = [(x,y) | x <- concat [1,2] [3,4]]
