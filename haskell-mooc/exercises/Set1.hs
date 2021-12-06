@@ -281,3 +281,11 @@ instance Functor ZipList where
 
 --        -- <*> :: ZipList (a->b) -> ZipList a -> ZipList b
 --        (Z gs) <$> (Z xs) = todo
+
+
+myCompare :: Ord a => [a] -> [a]
+myCompare [a] = [a]
+myCompare [] = []
+myCompare (x:y:xs) | x < y = x : myCompare xs
+                   | otherwise  = y : myCompare xs
+
