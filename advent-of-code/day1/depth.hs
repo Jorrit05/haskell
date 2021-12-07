@@ -1,12 +1,22 @@
-import qualified Data.Text    as Text
-import qualified Data.Text.IO as Text
+-- import qualified Data.Text    as Text
+-- import qualified Data.Text.IO as Text
+
+import System.IO
+import Control.Monad
 
 compareDepth :: Ord a => [a] -> [a]
-compareDepth [a] = [a]
+compareDepth [a] = []
 compareDepth [] = []
 compareDepth (x:y:xs) | y > x = y : compareDepth (y:xs)
                    | otherwise  = compareDepth (y:xs)
 
 main = do
-    depthList <- fmap Text.lines (Text.readFile "input.txt")
-    return $ length (compareDepth depthList)
+    -- fileContent is one large string.
+    fileContent <- readFile "input.txt"
+    -- Break up the string using the 'words' function, convert to 'Int' and insert to a list
+    let depthList =  map readInt . words $ fileContent
+
+    return (length $ compareDepth depthList)
+
+readInt :: String -> Int
+readInt = read
