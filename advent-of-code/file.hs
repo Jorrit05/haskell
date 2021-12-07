@@ -6,19 +6,15 @@ import qualified Data.Text.IO as Text
 -- convertToInt xs = return (parseOnly xs)
 
 
-myCompare :: Ord a => [a] -> [a]
-myCompare [a] = []
-myCompare [] = []
-myCompare (x:y:xs) | x > y = x : myCompare (y:xs)
-                   | x == y = myCompare (y:xs)
-                   | y > x
-                   | otherwise  = y : myCompare (y:xs)
-
-
+compareDepth :: Ord a => [a] -> [a]
+compareDepth [a] = [a]
+compareDepth [] = []
+compareDepth (x:y:xs) | y > x = y : compareDepth (y:xs)
+                   | otherwise  = compareDepth (y:xs)
 
 main = do
-    ls <- fmap Text.lines (Text.readFile "input.txt")
-    return $ length (myCompare ls)
+    depthList <- fmap Text.lines (Text.readFile "input.txt")
+    return $ length (compareDepth depthList)
 
 
 -- main = return compareLs ["1", "3"]
