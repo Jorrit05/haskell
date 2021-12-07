@@ -13,8 +13,9 @@ compareDepth (x:y:xs) | y > x = y : compareDepth (y:xs)
 main = do
     -- fileContent is one large string.
     fileContent <- readFile "input.txt"
-    -- Break up the string using the 'words' function, convert to 'Int' and insert to a list
-    let depthList =  map readInt . words $ fileContent
+    -- Break up the string to a list using the 'words' function.
+    -- convert to 'Int' and insert to a list
+    let depthList =  map readInt $ words fileContent
 
     return (length $ compareDepth depthList)
 
