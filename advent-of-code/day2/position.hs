@@ -2,13 +2,7 @@ import System.IO
 import Control.Monad
 
 data Movement = Forward Int | Down Int | Up Int
-    deriving Show
-
-instance Eq Movement where
-  (==) (Forward _) (Forward _) = True
-  (==) (Down _) (Down _) = True
-  (==) (Up _) (Up _) = True
-  (==) (_) (_) = False
+    deriving (Show, Ord, Eq, Read)
 
 getValue :: Movement -> Int
 getValue (Forward x) = x
@@ -42,6 +36,9 @@ getDown (x:xs) | x == (Down value) = value : getDown xs
                | otherwise = getDown xs
                where
                    value = (getValue x)
+
+-- foldr tel alles, geef tuple met 2 waarden terug
+-- (forward 0, up 0)
 
 main = do
     -- fileContent is one large string.
