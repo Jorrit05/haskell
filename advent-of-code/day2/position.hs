@@ -9,44 +9,48 @@ getValue (Forward x) = x
 getValue (Up x) = x
 getValue (Down x) = x
 
+strToMovement :: String -> Movement
+strToMovement str =  case words str of
+                        ["forward", a] -> Forward (read a)
+                        ["up", a] -> Up (read a)
+                        ["down", a] -> Down (read a)
+                        _ -> error "ohoh"
+
 readMovement :: [String] -> [Movement]
-readMovement [] = []
-readMovement (x:y:xs) | x == "forward" = Forward (read y) : readMovement xs
-                      | x == "up" = Up (read y) : readMovement xs
-                      | otherwise = Down (read y) : readMovement xs
+readMovement xs = map strToMovement xs
 
+processMovementAim :: Movement -> (Int, Int, Int) -> (Int, Int, Int)
+processMovementAim (Down x) (horizontal, depth, aim) = (horizontal, depth, (aim + x))
+processMovementAim (Forward x) (horizontal, depth, aim) = (horizontal + x, (x*aim), aim)
+processMovementAim (Up x) (horizontal, depth, aim) = (horizontal, depth, (aim - x))
 
-getForward :: [Movement] -> [Int]
-getForward [] = []
-getForward (x:xs) | x == (Forward value) = value : getForward xs
-                  | otherwise = getForward xs
-               where
-                   value = (getValue x)
+processMovement :: Movement -> (Int, Int) -> (Int, Int)
+processMovement (Forward x) (horizontal, depth) = (horizontal + x, depth)
+processMovement (Up x) (horizontal, depth) = (horizontal, depth - x)
+processMovement (Down x) (horizontal, depth) = (horizontal, depth + x)
 
-getUp :: [Movement] -> [Int]
-getUp [] = []
-getUp (x:xs) | x == (Up value) = value : getUp xs
-                  | otherwise = getUp xs
-               where
-                   value = (getValue x)
+processListAim :: [Movement] -> (Int, Int, Int)
+processListAim xs = foldr processMovementAim (0,0,0) xs
 
-getDown :: [Movement] -> [Int]
-getDown [] = []
-getDown (x:xs) | x == (Down value) = value : getDown xs
-               | otherwise = getDown xs
-               where
-                   value = (getValue x)
+processList :: [Movement] -> (Int, Int)
+processList xs = foldr processMovement (0,0) xs
 
--- foldr tel alles, geef tuple met 2 waarden terug
--- (forward 0, up 0)
+getPuzzleTwoResult :: (Int, Int, Int) -> Int
+getPuzzleTwoResult (horizontal, depth, aim) = horizontal * depth
 
 main = do
-    -- fileContent is one large string.
-    fileContent <- readFile "input.txt"
-    -- Break up the string to a list using the 'words' function.
-    let movementList =  readMovement $ words fileContent
-    let forwards = sum $ getForward movementList
-    let downs = sum $ getDown movementList
-    let ups = sum $ getUp movementList
-
-    return (forwards * (downs - ups))
+        -- fileContent is one large string.
+        fileContent <- readFile "test.txt"
+        -- Break up the string to a list using the 'lines' function.
+        let movementList =  readMovement $ lines fileContent
+        -- let puzzle1 = processList movementList
+        let puzzle2 =  movementList
+        return puzzle2
+        -- return puzzle2
+        -- let answer1 = (fst puzzle1 * snd puzzle1)
+        -- return (answer1 , (getPuzzleTwoResult puzzle2))
+        -- let forwards = sum $ getForward movementList
+        -- let downs = sum $ getDown movementList
+        -- let ups = sum $ getUp movementList
+        -- return 0
+        -- return (forwards * (downs - ups))
