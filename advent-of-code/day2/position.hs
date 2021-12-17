@@ -17,12 +17,12 @@ strToMovement str =  case words str of
                         _ -> error "ohoh"
 
 readMovement :: [String] -> [Movement]
-readMovement xs = map strToMovement xs
+readMovement = map strToMovement
 
 processMovementAim :: Movement -> (Int, Int, Int) -> (Int, Int, Int)
-processMovementAim (Down x) (horizontal, depth, aim) = (horizontal, depth, (aim + x))
-processMovementAim (Forward x) (horizontal, depth, aim) = (horizontal + x, (x*aim), aim)
-processMovementAim (Up x) (horizontal, depth, aim) = (horizontal, depth, (aim - x))
+processMovementAim (Forward x) (horizontal, depth, aim) = (horizontal + x, depth + x*aim, aim)
+processMovementAim (Down x) (horizontal, depth, aim) = (horizontal, depth, aim + x)
+processMovementAim (Up x) (horizontal, depth, aim) = (horizontal, depth, aim - x)
 
 processMovement :: Movement -> (Int, Int) -> (Int, Int)
 processMovement (Forward x) (horizontal, depth) = (horizontal + x, depth)
@@ -30,27 +30,21 @@ processMovement (Up x) (horizontal, depth) = (horizontal, depth - x)
 processMovement (Down x) (horizontal, depth) = (horizontal, depth + x)
 
 processListAim :: [Movement] -> (Int, Int, Int)
-processListAim xs = foldr processMovementAim (0,0,0) xs
+processListAim = foldr processMovementAim (0,0,0)
 
 processList :: [Movement] -> (Int, Int)
-processList xs = foldr processMovement (0,0) xs
+processList = foldr processMovement (0,0)
 
 getPuzzleTwoResult :: (Int, Int, Int) -> Int
 getPuzzleTwoResult (horizontal, depth, aim) = horizontal * depth
 
 main = do
         -- fileContent is one large string.
-        fileContent <- readFile "test.txt"
+        fileContent <- readFile "input.txt"
         -- Break up the string to a list using the 'lines' function.
         let movementList =  readMovement $ lines fileContent
-        -- let puzzle1 = processList movementList
-        let puzzle2 =  movementList
-        return puzzle2
-        -- return puzzle2
-        -- let answer1 = (fst puzzle1 * snd puzzle1)
-        -- return (answer1 , (getPuzzleTwoResult puzzle2))
-        -- let forwards = sum $ getForward movementList
-        -- let downs = sum $ getDown movementList
-        -- let ups = sum $ getUp movementList
-        -- return 0
-        -- return (forwards * (downs - ups))
+        let puzzle1 = processList movementList
+        let puzzle2 =  processListAim movementList
+
+        let answer1 = uncurry (*) puzzle1
+        return (answer1 , getPuzzleTwoResult puzzle2)
