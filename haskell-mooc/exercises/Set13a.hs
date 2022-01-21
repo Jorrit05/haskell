@@ -6,6 +6,7 @@ import Control.Monad
 import Control.Monad.Trans.State
 import Data.Char
 import Data.List
+import Data.List.Split
 import qualified Data.Map as Map
 
 import Examples.Bank
@@ -31,21 +32,26 @@ Nothing ?> _ = Nothing   -- In case of failure, propagate failure
 Just x  ?> f = f x       -- In case of sucess, run the next computation
 
 -- DO NOT touch this definition!
-readNames :: String -> Maybe (String,String)
-readNames s =
-  split s
-  ?>
-  checkNumber
-  ?>
-  checkCapitals
+-- readNames :: String -> Maybe (String,String)
+-- readNames s =
+--   mySplit s
+--   ?>
+--   checkNumber
+--   ?>
+--   checkCapitals
 
 -- split should split a string into two words. If the input doesn't
 -- contain a space, Nothing should be returned
 --
 -- (NB! There are obviously other corner cases like the inputs " " and
 -- "a b c", but you don't need to worry about those here)
-split :: String -> Maybe (String,String)
-split = todo
+mySplit :: String -> Maybe (String,String)
+mySplit str | lt == 0 = Nothing
+          | otherwise = Just (xss[0], xss[1])
+          where
+            xss = splitOn " " str
+            lt = length xss
+
 
 -- checkNumber should take a pair of two strings and return them
 -- unchanged if they don't contain numbers. Otherwise Nothing is

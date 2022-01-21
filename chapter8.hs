@@ -1,6 +1,6 @@
 import Data.Map.Internal.Debug (node)
 import Language.Haskell.TH.Syntax (occString, Exp)
-import System.Win32 (RegInfoKey(values))
+-- import System.Win32 (RegInfoKey(values))
 type Pos = (Int,Int)
 type Assoc k v = [(k,v)]
 
@@ -62,7 +62,6 @@ data Prop = Const Bool
             | And Prop Prop
             | Imply Prop Prop deriving Show
 
-data Nat = Zero | Succ Nat deriving Show
 
 nat2int :: Nat -> Int
 nat2int Zero = 0
@@ -71,11 +70,6 @@ nat2int (Succ n) = 1 + nat2int n
 int2nat :: Int -> Nat
 int2nat 0 = Zero
 int2nat n = Succ (int2nat (n-1))
-
-
-add :: Nat -> Nat -> Nat
-add Zero n = n
-add (Succ m) n = Succ (add m n)
 
 p1 :: Prop
 p1 = And (Var 'A') (Not (Var 'A'))
@@ -143,3 +137,14 @@ exec (ADD n : c) m = exec c (n+m)
 
 value' :: Expr -> Int
 value' e = eval' e []
+
+data Nat = Zero | Succ Nat
+            deriving Show
+
+add :: Nat -> Nat -> Nat
+add Zero n = n
+add (Succ m) n = Succ (add m n)
+
+mult :: Nat -> Nat -> Nat
+mult Zero n = n
+mult (Succ m) n = Succ

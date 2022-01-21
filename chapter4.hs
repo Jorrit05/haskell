@@ -17,3 +17,14 @@ safetail (_:xs) = tail xs
 
 concat1 :: [[a]] -> [a]
 concat1 xss = [x | xs <- xss, x <- xs]
+
+luhnDouble :: Int -> Int
+luhnDouble x = if nr > 9 then nr - 9 else nr
+                where
+                    nr = x * 2
+
+luhn :: Int -> Int -> Int -> Int -> Bool
+luhn a b c d = (x + b + y + d) `mod` 10 == 0
+                where
+                    x = luhnDouble a
+                    y = luhnDouble c

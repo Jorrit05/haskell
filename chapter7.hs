@@ -9,18 +9,14 @@ bit2int = foldr (\x y -> x + 2 * y) 0
 --                where weights = iterate (*2) 1
 
 int2bin :: Int -> [Bit]
-int2bin 0 = []
-int2bin n = n `mod` 2 : int2bin (n `div` 2)
+-- int2bin 0 = []
+-- int2bin n = n `mod` 2 : int2bin (n `div` 2)
 
 make8 :: [Bit] -> [Bit]
 make8 bits = take 8 (bits ++ repeat 0)
 
 encode :: String -> [Bit]
 encode = concat . map (make8 . int2bin . ord)
-
-chop8 :: [Bit] -> [[Bit]]
-chop8 [] = []
-chop8 bits = take 8 bits : chop8 (drop 8 bits)
 
 decode :: [Bit] -> String
 decode = map (chr . bit2int) . chop8
@@ -90,12 +86,47 @@ dropWhile' _ [] = []
 dropWhile' p (x:xs) | p x = dropWhile' p (tail xs)
                     | otherwise = x : xs
 
--- map' :: (a -> b) -> [a] -> [b]
--- map' f xs = [f x | x <- xs]
-map' f = foldr (\x xs -> f x : xs) []
 
 filter' p = foldr (\x xs -> if p x then x : xs else xs) []
 
 dec2int :: [Int] -> Int
 dec2int = foldl (\x y -> 10*x + y) 0
--- 0 + 10*1 + (10*2) + (10*3)
+-- a=(\x y -> 10*x + y)
+-- 0 `a` 1 `a` 2
+-- 12
+-- 0 `a` 1 `a` 2 `a` 3
+-- 123
+-- 0 `a` 1
+-- 1
+
+
+-- foldl :: (a -> b -> a) -> a -> [b] -> a
+-- foldl f v [] = v
+-- foldl f v (x:xs) = foldl f (f v x) xs
+
+curry' :: ((a,b) -> c) -> (a->b->c)
+curry' f = \x y -> f (x,y)
+
+uncurry' :: (a->b->c) -> ((a,b) -> c)
+uncurry' f = \(x,y) -> f x y
+
+unfold :: (a -> Bool) -> (a -> a) -> (a -> a) -> a -> [a]
+unfold p h t x | p x = []
+               | otherwise = h x : unfold p h t (t x)
+
+int2bin = unfold (== 0) (`mod` 2) (`div` 2)
+
+
+chop8 :: [Bit] -> [[Bit]]
+-- chop8 [] = []
+-- chop8 bits = take 8 bits : chop8 (drop 8 bits)
+chop8 = unfold null (take 8) (drop 8)
+
+map' :: (a -> b) -> [a] -> [b]
+-- map' :: (a -> b) -> [a] -> [b]
+-- map' f xs = [f x | x <- xs]
+-- map' f = foldr (\x xs -> f x : xs) []
+map' f = unfold null (f . head) tail
+
+iterate' :: (a -> a) -> a -> [a]
+iterate' = unfold (const False) id

@@ -104,13 +104,18 @@ instance Functor TwoList where
 --   count True [True,False,True] ==> 2
 --   count 'c' (Just 'c') ==> 1
 
-count :: (Eq a, Foldable f) => a -> f a -> Int
-count a xs  = length $ foldr (==a)  a xs
 
---  foldr (||) False [False, True, False]
-  -- 0 + (foldMap (\xs -> if a == xs then y + 1) xs)
-  --             where
-  --               y = 0
+-- countP :: Foldable f => (a -> Bool) -> f a -> Int
+-- countP p = foldl (\count x -> if p x then count + 1 else count) 0
+
+-- count :: (Eq a, Foldable f) => a -> f a -> Int
+-- count x = countP (==x)
+
+filterF :: Foldable t => (a -> Bool) -> t a -> [a]
+filterF f = foldMap (\x -> if f x then [x] else mempty)
+
+count :: (Eq a, Foldable f) => a -> f a -> Int
+count x r = length $ filterF (==x) r
 
 ------------------------------------------------------------------------------
 -- Ex 7: Return all elements that are in two Foldables, as a list.
@@ -119,6 +124,8 @@ count a xs  = length $ foldr (==a)  a xs
 --   inBoth "abcd" "fobar" ==> "ab"
 --   inBoth [1,2] (Just 2) ==> [2]
 --   inBoth Nothing [3]    ==> []
+
+
 
 inBoth :: (Foldable f, Foldable g, Eq a) => f a -> g a -> [a]
 inBoth = todo

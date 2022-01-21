@@ -46,7 +46,7 @@ odds :: [a] -> [a]
 odds [] = []
 odds (_:xs) = evens xs
 
-product' :: Num a => [a] -> a 
+product' :: Num a => [a] -> a
 product' [] = 1
 product' (n:ns) = n * product' ns
 
@@ -63,8 +63,8 @@ sumdown n = n + sumdown (n-1)
 -- m ^ n = m * (m^(n-1))
 
 euclid :: Int -> Int -> Int
-euclid m n | m == n = m 
-           | m < n = euclid m (n - m) 
+euclid m n | m == n = m
+           | m < n = euclid m (n - m)
            | n < m = euclid (m - n) n
 
 
@@ -75,9 +75,27 @@ and' (x:xs) | x == False = False
 
 concat' :: [[a]] -> [a]
 concat' [] = []
-concat' (x:xs) = x ++ concat' xs  
+concat' (x:xs) = x ++ concat' xs
 
 replicate' :: Int -> a -> [a]
 replicate' 0 _ = []
 replicate' n m = [m] ++ replicate' (n-1) m
 
+merge :: Ord a => [a] -> [a] -> [a]
+merge xss [] = xss
+merge [] yss = yss
+merge (x:xss) (y:yss) | x <= y = x : merge xss (y:yss)
+                      | otherwise = y : merge (x:xss) yss
+
+halve :: Ord a => [a] -> ([a], [a])
+halve [] = ([],[])
+halve xs = (take nr xs, drop nr xs)
+            where
+                nr = (length xs + 1) `div` 2
+
+msort :: Ord a => [a] -> [a]
+msort [] = []
+msort [x] = [x]
+msort xs = merge (msort (fst xss)) (msort (snd xss))
+            where
+                xss = halve xs
