@@ -6,7 +6,7 @@ import Control.Monad
 import Control.Monad.Trans.State
 import Data.Char
 import Data.List
-import Data.List.Split
+-- import Data.List.Split
 import qualified Data.Map as Map
 
 import Examples.Bank

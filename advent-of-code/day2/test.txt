@@ -1,2 +1,3 @@
-forward 5
+forward 6
 down 5
+forward 6
