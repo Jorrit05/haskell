@@ -1,6 +1,8 @@
 {
     "cSpell.words": [
+        "basecase",
         "foldl",
-        "foldr"
+        "foldr",
+        "uncurry"
     ]
 }

@@ -32,3 +32,8 @@ qsortReverse (x:xs) = qsortReverse larger ++ [x] ++ qsortReverse smaller
                where
                 larger = [a | a <- xs, a >= x]
                 smaller = [a | a <- xs, a < x]
+
+
+my :: [a] -> [a]
+my [] = []
+my (x:xs) = my xs ++ [x]
